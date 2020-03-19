@@ -1,52 +1,38 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 import boardStyles from './../Board/Board.css';
 import styles from './Boards.css';
 
-import Axios from 'axios';
-
-class Boards extends Component {
-    state = {
-        boardData: {},
-        serverError: false
-    }
-
-    componentDidMount = () => {
-        Axios.get('https://pro-organizer-f83b5.firebaseio.com/boardData.json')
-            .then(response => {
-                for(let value in response.data) {
-                    this.setState({
-                        boardData: response.data[value]
-                    })
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                this.setState({
-                    serverError: true
-                })
-            });
-    }
-
+export class Boards extends Component {
     render() {
-        let boards = null;
+        let boards = <div className={styles.Loading}>Loading...</div>;
 
-        if(this.state.serverError === false) {
-            Object.keys(this.state.boardData).length > 0 ?
-            boards = this.state.boardData.allBoards.map(boards => {
-                return (
-                    <Link 
-                        to={{
-                            pathname: `/board/${boards.id}`
-                        }} 
-                        key={boards.id}>
-                        <div className={styles.BoardCard}>
-                            {boards.name}
-                        </div>
-                    </Link>
+        if(this.props.serverError === false) {
+            if(this.props.loading === true) {
+                boards = <div className={styles.Loading}>Loading...</div>
+            } else {
+                this.props.boardData.allBoards === undefined ?
+                boards = <div className={styles.Loading}>You have not created any boards. Create a new board by clicking on the 'Create Board' section at the top.</div> :
+                (
+                    Object.keys(this.props.boardData).length > 0 ?
+                    boards = this.props.boardData.allBoards.map(boards => {
+                        return (
+                            <Link 
+                                to={{
+                                    pathname: `/board/${boards.id}`
+                                }} 
+                                key={boards.id}>
+                                <div className={styles.BoardCard}>
+                                    {boards.name}
+                                </div>
+                            </Link>
+                        )
+                    }) :
+                    boards = <div className={styles.Loading}>Loading...</div>
                 )
-            }) :
-            boards = <div className={styles.Loading}>Loading...</div>
+            }
         } else {
             boards = <p>There seems to be a server error. Please try again later.</p>;
         }
@@ -62,4 +48,12 @@ class Boards extends Component {
     }
 }
 
-export default Boards;
+const mapStateToProps = state => {
+    return {
+        boardData: state.boards.boardData,
+        serverError: state.boards.serverError,
+        loading: state.boards.loading
+    }
+}
+
+export default connect(mapStateToProps)(Boards);

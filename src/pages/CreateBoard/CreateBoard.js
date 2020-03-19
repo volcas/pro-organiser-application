@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import styles from './CreateBoard.css';
 
 import FormElements from './../../components/FormElements/FormElements';
 import Axios from 'axios';
 
-class CreateBoard extends Component {
+import * as actions from './../../store/actions/index';
+
+export class CreateBoard extends Component {
     constructor(props) {
         super(props);
         this.boardNameRef = React.createRef();
@@ -36,32 +39,11 @@ class CreateBoard extends Component {
                 id: 'type',
                 value: null
             }
-        ],
-        allBoards: [],
-        allBoardsData: { }
-    }
-
-    componentDidMount = () => {
-        Axios.get('https://pro-organizer-f83b5.firebaseio.com/boardData/-LuM4blPg67eyvzgAzwn/allBoards.json')
-            .then(response => {
-                this.setState({
-                    allBoards: response.data
-                })
-            })
-            .catch(error => {console.log(error)});
-
-        Axios.get('https://pro-organizer-f83b5.firebaseio.com/boardData/-LuM4blPg67eyvzgAzwn/boards.json')
-            .then(response => {
-                this.setState({
-                    allBoardsData: response.data
-                })
-            })
-            .catch(error => {console.log(error)});
+        ]
     }
 
     createBoardHandler = () => {
-        let boards = [...this.state.allBoards];
-        let boardsData = {...this.state.allBoardsData};
+        let boards = this.props.boardData.allBoards !== null ? [...this.props.boardData.allBoards] : [];
         let formElements = {...this.state.formElements};
         let id = 'board' + (boards.length + 1);
         let newBoard = {
@@ -92,17 +74,28 @@ class CreateBoard extends Component {
         }
         newBoardData.name = newBoard.name;
 
-        boards.push(newBoard);
-        boardsData[id] = newBoardData;
-        Axios.put('https://pro-organizer-f83b5.firebaseio.com/boardData/-LuM4blPg67eyvzgAzwn/allBoards.json', boards)
-            .then(response => {
-                Axios.put('https://pro-organizer-f83b5.firebaseio.com/boardData/-LuM4blPg67eyvzgAzwn/boards.json', boardsData)
-                    .then(response => {
-                        this.props.history.push('/');
-                    })
-                .catch(error => {console.log('Boards.json error ', error);})
-            })
-            .catch(error => {console.log('allBoards.json error', error);})
+
+        let updatedBoardData = {...this.props.boardData};
+        if(updatedBoardData.allBoards !== undefined) { 
+            updatedBoardData.allBoards.push(newBoard);
+        } else {
+            updatedBoardData['allBoards'] = [];
+            updatedBoardData.allBoards.push(newBoard);
+        }
+
+        if(updatedBoardData.boards !== undefined) {
+            updatedBoardData.boards[id] = newBoardData;
+        } else {
+            updatedBoardData.boards = {};
+            updatedBoardData.boards[id] = newBoardData;
+        }
+
+        Axios.put('https://pro-organizer-f83b5.firebaseio.com/boardData/-LuM4blPg67eyvzgAzwn.json', updatedBoardData)
+        .then(response => {
+            this.props.updateBoardData(updatedBoardData);
+            this.props.history.push('/');
+        })
+        .catch(error => {console.log(error)});
     }
 
     changeHandler = (id, value) => {
@@ -132,10 +125,22 @@ class CreateBoard extends Component {
                 <div className={styles.BoardForm}>
                     {formElements}
                 </div>
-                <button id= 'CreateBoard' className={styles.CreateButton} onClick={this.createBoardHandler}>Create</button>
+                <button className={styles.CreateButton} onClick={this.createBoardHandler}>Create</button>
             </div>
         )
     }
 }
 
-export default CreateBoard;
+const mapStateToProps = state => {
+    return {
+        boardData: state.boards.boardData
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        updateBoardData: (data) => dispatch(actions.updateBoardData(data))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateBoard);
