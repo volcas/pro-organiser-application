@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
 import styles from './Layout.css';
 
 import NavigationBar from './../../components/NavigationBar/NavigationBar';
-
-import * as actions from './../../store/actions/index';
 class Layout extends Component {
-    componentDidMount() {
-        this.props.initBoards();
-    }
-    
-
     render() {
         return (
             <React.Fragment>
@@ -24,11 +15,4 @@ class Layout extends Component {
     }
 }
 
-
-const mapDispatchToProps = dispatch => {
-    return {
-        initBoards: () => dispatch(actions.initBoards())
-    }
-}
-
-export default connect(null, mapDispatchToProps)(Layout);
+export default Layout

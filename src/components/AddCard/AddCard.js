@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import styles from './AddCard.css';
 import boardStyles from './../../pages/Board/Board.css';
 import createBoardStyles from './../../pages/CreateBoard/CreateBoard.css';
 
 import FormElements from './../FormElements/FormElements';
-import Axios from 'axios';
 
 class AddCard extends Component {    
     state = {
@@ -64,41 +62,12 @@ class AddCard extends Component {
     }
 
     addCardHandler = () => {
-        let columnBoardData = {...this.props.boardData.boards[this.props.boardID]};
-        let updatedBoardData = {...this.props.boardData};
-
         let values = {};
         let formElements = this.state.formElements
         for(let key in formElements) {
             values[formElements[key].id] = formElements[key].value;
         }
-        values['board_id'] = columnBoardData.id;
-        values['column'] = this.props.columnID;
-        values['id'] = columnBoardData.cards !== undefined ? columnBoardData.cards.slice(-1)[0].id + 1 : 0;
-        values['due_date'] = values['due_date'] !== 'NaN-NaN-NaN' && values['due_date'] !== null ? new Date(values['due_date']).getTime() : null;
-
-        if(this.props.editCard) {
-            let id = this.props.cardData.card[0].id;
-            let cardData = columnBoardData.cards.filter(card => {return card.id === id});
-            for(let key in values) {
-                cardData[0][key] = values[key];
-            }
-            updatedBoardData.boards[this.props.boardID] = columnBoardData;
-        } else {
-            let cards = [];
-            if(columnBoardData.cards !== undefined) {
-                cards = [...columnBoardData.cards];
-            }
-            cards.push(values);
-
-            columnBoardData.cards = cards;
-
-            updatedBoardData.boards[this.props.boardID] = columnBoardData;
-        }
-
-        Axios.put('https://pro-organizer-f83b5.firebaseio.com/boardData/-LuM4blPg67eyvzgAzwn.json', updatedBoardData)
-            .then(response => {this.props.addCard()})
-            .catch(error => {console.log(error)});
+        this.props.addCard(values);
     }
 
     formChangeHandler = (id, value) => {
@@ -125,16 +94,10 @@ class AddCard extends Component {
             <div className={styles.AddCard}>
                 <p className={boardStyles.BoardTitle}>{this.props.editCard ? 'Edit Card' : 'Add Card'}</p>
                 { formElements }
-                <button id='CreateCard' className={createBoardStyles.CreateButton} onClick={this.addCardHandler}>{this.props.editCard ? 'Edit Card' : 'Add Card'}</button>
+                <button id='CreateCard'className={createBoardStyles.CreateButton} onClick={this.addCardHandler}>{this.props.editCard ? 'Edit Card' : 'Add Card'}</button>
             </div>
         )
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        boardData: state.boards.boardData
-    };
-}
-
-export default connect(mapStateToProps)(AddCard);
+export default AddCard;
