@@ -125,7 +125,7 @@ class AddCard extends Component {
             <div className={styles.AddCard}>
                 <p className={boardStyles.BoardTitle}>{this.props.editCard ? 'Edit Card' : 'Add Card'}</p>
                 { formElements }
-                <button className={createBoardStyles.CreateButton} onClick={this.addCardHandler}>{this.props.editCard ? 'Edit Card' : 'Add Card'}</button>
+                <button id='CreateCard' className={createBoardStyles.CreateButton} onClick={this.addCardHandler}>{this.props.editCard ? 'Edit Card' : 'Add Card'}</button>
             </div>
         )
     }

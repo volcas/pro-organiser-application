@@ -125,7 +125,7 @@ export class CreateBoard extends Component {
                 <div className={styles.BoardForm}>
                     {formElements}
                 </div>
-                <button className={styles.CreateButton} onClick={this.createBoardHandler}>Create</button>
+                <button id='CreateBoard'className={styles.CreateButton} onClick={this.createBoardHandler}>Create</button>
             </div>
         )
     }

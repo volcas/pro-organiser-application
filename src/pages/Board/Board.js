@@ -305,9 +305,9 @@ class Board extends Component {
                                     {this.state.noColumnName ? <span style={{color: 'red'}}>Please add a column name</span> : null}
                                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                                         <p>Enter a column name:</p>
-                                        <input type='text' ref={this.addColumnRef} value={this.state.columnName} onChange={this.columnNameChangeHandler} style={{width: '100%'}} />
+                                        <input id='column_name' type='text' ref={this.addColumnRef} value={this.state.columnName} onChange={this.columnNameChangeHandler} style={{width: '100%'}} />
                                     </div>
-                                    <button className={createBoardStyles.CreateButton} style={{width: 'auto', float: 'right'}} onClick={this.addColumnToDBHandler}>Add Column</button>
+                                    <button id='CreateColumn' className={createBoardStyles.CreateButton} style={{width: 'auto', float: 'right'}} onClick={this.addColumnToDBHandler}>Add Column</button>
                                 </>
                             }
                             close={this.closeAddColumnModalHandler}
