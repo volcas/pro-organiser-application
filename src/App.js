@@ -1,20 +1,24 @@
 import React from "react";
+/* import './App.css'; */
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Home } from "./Containers/HomePage/Home";
-import { AddBoard } from "./Containers/CreateBoard/AddBoard";
-import { Header } from "./components/Header/Header";
-import { Board } from "./Containers/board/Board";
+import Navigation from "./components/Navigation/Navigation";
+import Home from "./components/Home/Home";
+import Board from "./components/Board/Board";
+import Boards from "./components/Boards/Boards";
 
 function App() {
   return (
     <Router>
-      <Header />
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/createboard" component={AddBoard} />
-        <Route path="/board/:name" component={Board} />
-        <Route exact path="*" component={Home} />
-      </Switch>
+      <div className="App">
+        <Navigation />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/pro-organiser-application" component={Home} />
+          <Route path="/createboard" component={Board} />
+          <Route path="/:id/:name" component={Boards} />
+          <Route render={() => <h2>404 Page Not Found</h2>} />
+        </Switch>
+      </div>
     </Router>
   );
 }
