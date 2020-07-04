@@ -1,26 +1,51 @@
 import React from "react";
-/* import './App.css'; */
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Navigation from "./components/Navigation/Navigation";
-import Home from "./components/Home/Home";
-import Board from "./components/Board/Board";
-import Boards from "./components/Boards/Boards";
+import { useState, useEffect } from "react";
+import "./App.css";
+import { Route, Switch, Redirect } from "react-router-dom";
+import NavBar from "./Components/NavBar/NavBar";
+import Homepage from "./Pages/Homepage/Homepage";
+import Board_Page from "./Pages/Create_Board_Page/Board_Page";
+import MyBoard_Page from "./Pages/Individual_Board_Page/MyBoard";
+// import SignIn_SignUp_Page from "./Pages/SignIn_SignUp _Page/SignIn_SignUp";
+// import { auth, createUserProfileDocument } from "./Firebase/firebase.utils"; //so that our appn listens to user state changes from firebase
 
-function App() {
+const App = () => {
+  // const [currentUser, setCurrentUser] = useState(null);
+  // let unSubscribeFromAuth = null;
+  // useEffect(() => {
+  //   unSubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+  //     // setCurrentUser(user);
+  //     // createUserProfileDocument(user);
+  //     // console.log(user);
+  //     if (userAuth) {
+  //       const userRef = await createUserProfileDocument(userAuth);
+  //       userRef.onSnapshot((snapShot) => {
+  //         // console.log(snapShot.data());
+  //         setCurrentUser({ id: snapShot.id, ...snapShot.data() });
+  //       });
+  //     } else {
+  //       setCurrentUser(userAuth);
+  //     }
+  //   });
+  //   return () => {
+  //     console.log("it works as component will unmount.");
+  //     unSubscribeFromAuth(); //it will close the subscription
+  //   };
+  // }, []);
+  // console.log(currentUser);
   return (
-    <Router>
-      <div className="App">
-        <Navigation />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/pro-organiser-application" component={Home} />
-          <Route path="/createboard" component={Board} />
-          <Route path="/:id/:name" component={Boards} />
-          <Route render={() => <h2>404 Page Not Found</h2>} />
-        </Switch>
-      </div>
-    </Router>
+    <div className="App">
+      <NavBar /*currentUser={currentUser} *//>
+      <Switch>
+        {/* <Route path="/signin" component={SignIn_SignUp_Page} /> */}
+        {/* <Route path="/" exact render={()=>currentUser?<Homepage/>:<Redirect to="/signin"/>} />
+        <Route path="/createboard" exact strict render={()=>currentUser?<Board_Page/>:<Redirect to="/signin"/>} />
+        <Route path="/:boardName" render={()=>currentUser?<MyBoard_Page/>:<Redirect to="/signin"/>}/> */}
+        <Route path="/" exact component={Homepage} />
+        <Route path="/createboard" exact strict component={Board_Page} />
+        <Route path="/:boardName" component={MyBoard_Page} />
+      </Switch>
+    </div>
   );
-}
-
+};
 export default App;
