@@ -67,7 +67,7 @@ const Board_Page = () => {
                 type="text"
                 placeholder="Add your team(seperated by commas)"
                 onChange={handleBoardMembers}
-                id="board_members"
+                id="team"
                 value={boardMember}
                 required
               />
@@ -80,7 +80,7 @@ const Board_Page = () => {
                 type="text"
                 placeholder="e.g Design UI(optional)"
                 onChange={handleBoardType}
-                id="board_type"
+                id="type"
                 value={boardType}
               />
             </div>
