@@ -54,7 +54,7 @@ const Board_Page = () => {
                 type="text"
                 placeholder="e.g Agile Sprint Board"
                 onChange={handleBoardName}
-                id="board_name"
+                id="name"
                 value={boardName}
                 required
               />
